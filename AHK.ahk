@@ -2,9 +2,9 @@
 ; Email     vic4key@gmail.com
 
 ; Adjust Speakers
-#F8::Send {Volume_Mute}	; ALT F8
-#F7::Send {Volume_Up}   ; ALT F7
-#F6::Send {Volume_Down} ; ALT F6
+#F8::Send {Volume_Mute}   ; WIN F8
+#Up::Send {Volume_Up}     ; WIN UP
+#Down::Send {Volume_Down} ; WIN DOWN
 
 ; Supports paste clipboard to CMD
 ; #IfWinActive ahk_class ConsoleWindowClass
