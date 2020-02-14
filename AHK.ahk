@@ -18,4 +18,17 @@
 <!1::Send, ^#{Left}   ; ALT 2
 
 ; Set Always On Top
-#SPACE:: Winset, Alwaysontop, , A  ; WIN SPACE
+#SPACE:: Winset, Alwaysontop, , A ; WIN SPACE
+
+; Open folder of the an active window
+#O:: OpenFolderActiveWindow() ; WIN O
+
+; Functions
+
+OpenFolderActiveWindow()
+{
+    WinGet, WID, ID, A
+    WinGet, FilePath, ProcessPath, ahk_id %WID%
+    SplitPath, FilePath,, FileDir
+    Run, %FileDir%
+}
