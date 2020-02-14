@@ -18,4 +18,4 @@
 <!1::Send, ^#{Left}   ; ALT 2
 
 ; Set Always On Top
-^!SPACE:: Winset, Alwaysontop, , A  ; CTRL ALT SPACE
+#SPACE:: Winset, Alwaysontop, , A  ; WIN SPACE
