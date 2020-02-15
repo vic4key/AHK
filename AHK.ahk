@@ -65,6 +65,8 @@ DisplayInfoActiveWindow()
     WinGet, PID, PID, A
     WinGet, WID, ID, A
 
+    0xPID := Format("{:X}", PID)
+
     Bits := ProcessGetBits(PID)
 
     WinGetTitle, TitleName, A
@@ -75,7 +77,7 @@ DisplayInfoActiveWindow()
     SplitPath, FilePath, FileName, FileDir, , , FileDrive
 
     Var = %Var%`n[+] Process`n
-    Var = %Var%`tPID : %PID%`n
+    Var = %Var%`tPID : %PID% or 0x%0xPID%`n
     Var = %Var%`tBits : %Bits%`n
 
     Var = %Var%`n[+] Window`n
