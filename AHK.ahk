@@ -38,14 +38,14 @@ DisplayHelp()
     Var = %Var%Volume Down : WIN DOWN`n
     Var = %Var%`n
 
-    Var = %Var%Switching Virtual Desktop : ALT 1 & ALT 2`n
+    Var = %Var%View Active Window Information : WIN Y`n
+    Var = %Var%Open Active Window Containing Folder : WIN O`n
+    Var = %Var%Set Active Window Always On Top : WIN SPACE`n
     Var = %Var%`n
 
-    Var = %Var%Set Always On Top : WIN SPACE`n
+    Var = %Var%Virtual Desktop Switching : ALT 1 & ALT 2`n
     Var = %Var%`n
 
-    Var = %Var%Open folder of an active window : WIN O`n
-    Var = %Var%`n
 
     Var = %Var%Help : WIN H`n
 
