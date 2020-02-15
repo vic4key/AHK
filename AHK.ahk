@@ -49,7 +49,7 @@ DisplayHelp()
 
     Var = %Var%Help : WIN H`n
 
-    MsgBox, 0x1040, INFORMATION, %Var%
+    MsgBox, 0x1040, AHK Help, %Var%
 }
 
 OpenFolderActiveWindow()
