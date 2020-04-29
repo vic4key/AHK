@@ -100,7 +100,10 @@ ProcessGetBits(ProcessID)
     DllCall("kernel32\IsWow64Process", Ptr, hp, IntP, IsWow64)
     DllCall("kernel32\CloseHandle", Ptr, hp)
 
-    if !A_Is64bitOS or IsWow64 return "32-bit"
+    if (not A_Is64bitOS or IsWow64)
+    {
+        return "32-bit"
+    }
 
     return "64-bit"
 }
