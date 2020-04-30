@@ -2,4 +2,6 @@
 
 AHK - Auto Hot Key
 
-![](AHK.png)
+![](AHK.Help.PNG)
+
+![](AHK.App.Information.PNG)
