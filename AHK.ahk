@@ -22,13 +22,16 @@ DetectHiddenWindows, On
 ; Set Always On Top
 #SPACE:: Winset, Alwaysontop, , A ; WIN SPACE
 
-; Open folder of an active window
-#O:: OpenFolderActiveWindow() ; WIN O
+; Open Folder of an Active Window
+#O:: OpenActiveWindowFolder() ; WIN O
 
-; Display help
-#Y:: DisplayInfoActiveWindow() ; WIN Y
+; Termimate Active Window
+#DEL:: TerminateActiveWindow() ; WIN DEL
 
-; Display help
+; Display Active Window Information
+#Y:: DisplayActiveWindowInformation() ; WIN Y
+
+; Display Help
 #H:: DisplayHelp() ; WIN H
 
 ; Functions
@@ -41,6 +44,7 @@ DisplayHelp()
     Var = %Var%`n
 
     Var = %Var%View Active App Information : WIN Y`n
+    Var = %Var%Terminate Current Active App : WIN DEL`n
     Var = %Var%Open Active App Containing Folder : WIN O`n
     Var = %Var%Set Active Window Always On Top : WIN SPACE`n
     Var = %Var%`n
@@ -54,7 +58,7 @@ DisplayHelp()
     MsgBox, 0x1040, AHK Help, %Var%
 }
 
-OpenFolderActiveWindow()
+OpenActiveWindowFolder()
 {
     WinGet, WID, ID, A
     WinGet, FilePath, ProcessPath, ahk_id %WID%
@@ -62,9 +66,9 @@ OpenFolderActiveWindow()
     Run, %FileDir%
 }
 
-ProcessGetBits(ProcessID)
+GetProcessBits(PID)
 {
-    hp := DllCall("kernel32\OpenProcess", UInt, 0x400, Int, 0, UInt, ProcessID, Ptr)
+    hp := DllCall("kernel32\OpenProcess", UInt, 0x400, Int, 0, UInt, PID, Ptr)
     DllCall("kernel32\IsWow64Process", Ptr, hp, IntP, IsWow64)
     DllCall("kernel32\CloseHandle", Ptr, hp)
 
@@ -76,21 +80,17 @@ ProcessGetBits(ProcessID)
     return "64-bit"
 }
 
-DisplayInfoActiveWindow()
+GetActiveWindowInformation(PID)
 {
-    Gui, Destroy ; Destroy Exists
-
-    WinGet, PID, PID, A
-    WinGet, WID, ID, A
-
     0xPID := Format("{:X}", PID)
 
-    Bits := ProcessGetBits(PID)
+    Bits := GetProcessBits(PID)
 
     WinGetTitle, TitleName, A
     WinGetClass, ClassName, A
     WinGetPos, PosX, PosY, Width, Height, A
 
+    WinGet, WID, ID, A
     WinGet, FilePath, ProcessPath, ahk_id %WID%
     SplitPath, FilePath, FileName, FileDir, , , FileDrive
 
@@ -141,13 +141,26 @@ DisplayInfoActiveWindow()
     Var = %Var%`tModified : %FileTimeM%`n
     Var = %Var%`tAccessed : %FileTimeA%`n
 
+    return Var
+}
+
+DisplayActiveWindowInformation()
+{
+    Gui, Destroy
+
+    WinGet, PID, PID, A
+    Var := GetActiveWindowInformation(PID)
+
+    WinGetPos, PosX, PosY, Width, Height, A
+
     GUI, Font, s9, Courier New
     GUI, Add, Edit, hwndEDIT, %Var%
+    GUI, Add, Button, g_TerminateActiveWindow, TERMINATE %PID%
 
     GUI, Show, x%A_ScreenWidth% y%A_ScreenHeight%
     WinGet, Wnd, ID, A
     WinGetPos, _, _, W, H, ahk_id %Wnd%
-    X := PosX + Width / 2 - W / 2
+    X := PosX + Width  / 2 - W / 2
     Y := PosY + Height / 2 - H / 2
     GUI, Show, Hide
     GUI, Show, x%X% y%Y%, App Information
@@ -155,6 +168,53 @@ DisplayInfoActiveWindow()
     SendMessage, 0x00B1, -1, 0, , % "ahk_id" EDIT ; EM_SETSEL = 0x00B1
     WinSet, AlwaysOnTop, On, App Information
 }
+
+TerminateActiveWindow()
+{
+    WinGet, PID, PID, A
+
+    0xPID := Format("{:X}", PID)
+
+    Bits := GetProcessBits(PID)
+
+    WinGetTitle, TitleName, A
+    WinGetClass, ClassName, A
+    WinGetPos, PosX, PosY, Width, Height, A
+
+    Var = %Var%`n[+] Process`n
+    Var = %Var%`tPID  : %PID% or 0x%0xPID%`n
+    Var = %Var%`tBits : %Bits%`n
+
+    Var = %Var%`n[+] Window`n
+    Var = %Var%`tTitle : %TitleName%`n
+    Var = %Var%`tClass : %ClassName%`n
+
+    ; 0x1000    System Modal (always on top)
+    ; 0x100     Makes the 2nd button the default
+    ; 0x20      Icon Question
+    ; 0x4       Yes/No
+    MsgBox, 0x1124, AHK Terminate Process, %Var%`n Are you sure to kill this process ?
+    ifMsgBox,Yes
+    {
+        Process,Close,%PID%
+    }
+}
+
+_TerminateActiveWindow:
+{
+    RegExMatch(A_GuiControl, "\d+$", PID)
+    ; 0x1000    System Modal (always on top)
+    ; 0x100     Makes the 2nd button the default
+    ; 0x20      Icon Question
+    ; 0x4       Yes/No
+    MsgBox, 0x1124, AHK Terminate Process, %Var%`nAre you sure to kill this process ?
+    ifMsgBox,Yes
+    {
+        Process,Close,%PID%
+        Gui, Destroy
+    }
+}
+return
 
 GuiClose:
 GuiEscape:
