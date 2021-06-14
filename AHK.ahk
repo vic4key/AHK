@@ -193,7 +193,7 @@ TerminateActiveWindow()
     ; 0x100     Makes the 2nd button the default
     ; 0x20      Icon Question
     ; 0x4       Yes/No
-    MsgBox, 0x1124, AHK Terminate Process, %Var%`n Are you sure to kill this process ?
+    MsgBox, 0x1024, AHK Terminate Process, %Var%`n Are you sure to kill this process ?
     ifMsgBox,Yes
     {
         Process,Close,%PID%
@@ -203,16 +203,18 @@ TerminateActiveWindow()
 _TerminateActiveWindow:
 {
     RegExMatch(A_GuiControl, "\d+$", PID)
+    Process,Close,%PID%
+    Gui, Destroy
     ; 0x1000    System Modal (always on top)
     ; 0x100     Makes the 2nd button the default
     ; 0x20      Icon Question
     ; 0x4       Yes/No
-    MsgBox, 0x1124, AHK Terminate Process, %Var%`nAre you sure to kill this process ?
-    ifMsgBox,Yes
-    {
-        Process,Close,%PID%
-        Gui, Destroy
-    }
+    ; MsgBox, 0x1024, AHK Terminate Process, %Var%`nAre you sure to kill this process ?
+    ; ifMsgBox,Yes
+    ; {
+    ;     Process,Close,%PID%
+    ;     Gui, Destroy
+    ; }
 }
 return
 
