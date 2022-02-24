@@ -20,7 +20,10 @@ DetectHiddenWindows, On
 <!1::Send, ^#{Left}   ; ALT 2
 
 ; Set Always On Top
-#SPACE:: Winset, Alwaysontop, , A ; WIN SPACE
+#T:: Winset, Alwaysontop, , A ; WIN T
+
+; Prevent Window Closing
+#SPACE::PreventWindowClosing() ; WIN SPACE
 
 ; Open Folder of an Active Window
 #O:: OpenActiveWindowFolder() ; WIN O
@@ -36,6 +39,61 @@ DetectHiddenWindows, On
 
 ; Functions
 
+SystemMenu_Exists_Close(hWnd)
+{
+    hSysMenu := DllCall("user32\GetSystemMenu","UInt",hWnd,"UInt",FALSE)
+    nCount := DllCall("user32\GetMenuItemCount","Int",hSysMenu)
+
+    Result := False
+
+    Loop %nCount%
+    {
+        Idx := A_Index - 1
+        Id := DllCall("user32\GetMenuItemID", "Int", hSysMenu, "Int", Idx)
+
+        MAX_COUNT := 100
+        MF_BYPOSITION := 0x0400
+        VarSetCapacity(lpString, MAX_COUNT, 0)
+        DllCall("user32\GetMenuString", "UInt",hSysMenu, "UINT",Idx, "STR",lpString, "Int",MAX_COUNT, "UINT",MF_BYPOSITION)
+
+        Txt := SubStr(lpString, 1, 6)
+        If (Txt == "&Close")
+        {
+            ; MsgBox % Format("{:d}. '{}'", Idx, Txt)
+            Result := True
+            Break
+        }
+    }
+
+    return Result
+}
+
+SystemMenu_Remove_Close(hWnd)
+{
+    hSysMenu := DllCall("user32\GetSystemMenu","UInt",hWnd,"UInt",FALSE)
+    nCount := DllCall("user32\GetMenuItemCount","Int",hSysMenu)
+    DllCall("user32\RemoveMenu","Int",hSysMenu,"UInt",nCount-1,"Uint","0x400") ; Close
+    DllCall("user32\RemoveMenu","Int",hSysMenu,"UInt",nCount-2,"Uint","0x400") ; Separator
+}
+
+SystemMenu_Restore_Close(hWnd)
+{
+    hSysMenu := DllCall("user32\GetSystemMenu","UInt",hWnd,"UInt",1)
+    DllCall("user32\DrawMenuBar","UInt",hWnd)
+}
+
+PreventWindowClosing()
+{
+    WinGet, hWnd, ID, A
+
+    HasClose := SystemMenu_Exists_Close(hWnd)
+
+    If (HasClose)
+        SystemMenu_Remove_Close(hWnd)
+    Else
+        SystemMenu_Restore_Close(hWnd)
+}
+
 DisplayHelp()
 {
     Var = %Var%Volume Mute : WIN F8`n
@@ -45,8 +103,9 @@ DisplayHelp()
 
     Var = %Var%View Active App Information : WIN Y`n
     Var = %Var%Terminate Current Active App : WIN DEL`n
+    Var = %Var%Prevent Window Closing : WIN SPACE`n
+    Var = %Var%Set Active Window Always On Top : WIN T`n
     Var = %Var%Open Active App Containing Folder : WIN O`n
-    Var = %Var%Set Active Window Always On Top : WIN SPACE`n
     Var = %Var%`n
 
     Var = %Var%Virtual Desktop Switching : ALT 1 & ALT 2`n
