@@ -3,6 +3,15 @@
 
 DetectHiddenWindows, On
 
+; Confirm Window Closing
+; GroupAdd $GroupEscapeConfirmation, ahk_class Notepad
+GroupAdd $GroupEscapeConfirmation, ahk_exe TortoiseProc.exe
+GroupAdd $GroupEscapeConfirmation, ahk_exe TortoiseMerge.exe
+GroupAdd $GroupEscapeConfirmation, ahk_exe TortoiseGitProc.exe
+#IfWinActive ahk_group $GroupEscapeConfirmation
+Esc::goto _EscapeCloseWindowConfirmation ; ESC
+#IfWinActive
+
 ; Adjust Speakers
 #F8::Send {Volume_Mute}   ; WIN F8
 #Up::Send {Volume_Up}     ; WIN UP
@@ -103,14 +112,14 @@ DisplayHelp()
 
     Var = %Var%View Active App Information : WIN Y`n
     Var = %Var%Terminate Current Active App : WIN DEL`n
-    Var = %Var%Prevent Window Closing : WIN SPACE`n
+    Var = %Var%Prevent Window Closing by System Menu : WIN SPACE`n
+    Var = %Var%Confirm Window Closing by Escape: ESC`n
     Var = %Var%Set Active Window Always On Top : WIN T`n
     Var = %Var%Open Active App Containing Folder : WIN O`n
     Var = %Var%`n
 
     Var = %Var%Virtual Desktop Switching : ALT 1 & ALT 2`n
     Var = %Var%`n
-
 
     Var = %Var%Help : WIN H`n
 
@@ -258,6 +267,32 @@ TerminateActiveWindow()
         Process,Close,%PID%
     }
 }
+
+_EscapeCloseWindowConfirmation:
+{
+    WinGet, WID, ID, A
+    WinGet, Active_Process, ProcessName, ahk_id %WID%
+
+    WinGetTitle, TitleName, A
+
+    TitleNameMaxLen := 40
+    TitleNameLen := StrLen(TitleName)
+    If (TitleNameLen > TitleNameMaxLen)
+    {
+        TitleName := SubStr(TitleName, 1, TitleNameMaxLen)
+        TitleName = %TitleName%` ...`
+    }
+
+    Var = `Would you like to close close ?`n
+    Var = %Var%` `n
+    Var = %Var%`Title Name : %TitleName%`n
+    Var = %Var%`Process Name : %Active_Process%`n
+
+    MsgBox, 0x1024, AHK Close Window Confirmation, %Var%
+    IfMsgBox, Yes
+    WinClose A
+}
+return
 
 _TerminateActiveWindow:
 {
