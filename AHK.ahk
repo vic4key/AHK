@@ -283,7 +283,7 @@ _EscapeCloseWindowConfirmation:
         TitleName = %TitleName%` ...`
     }
 
-    Var = `Would you like to close close ?`n
+    Var = `Would you like to close this window ?`n
     Var = %Var%` `n
     Var = %Var%`Title Name : %TitleName%`n
     Var = %Var%`Process Name : %Active_Process%`n
