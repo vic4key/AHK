@@ -49,6 +49,19 @@ Esc::goto _EscapeCloseWindowConfirmation ; ESC
 
 ; Functions
 
+TruncateString(Str, MaxLen)
+{
+    N := StrLen(Str)
+    If (N > MaxLen)
+    {
+        Str := SubStr(Str, 1, MaxLen)
+        Str = %Str%` ...`
+        return Str
+    }
+
+    return Str
+}
+
 SystemMenu_Exists_Close(hWnd)
 {
     hSysMenu := DllCall("user32\GetSystemMenu","UInt",hWnd,"UInt",FALSE)
@@ -250,6 +263,10 @@ TerminateActiveWindow()
     WinGetClass, ClassName, A
     WinGetPos, PosX, PosY, Width, Height, A
 
+    MAX_STR_LEN = 30
+    TitleName := TruncateString(TitleName, MAX_STR_LEN)
+    ClassName := TruncateString(ClassName, MAX_STR_LEN)
+
     Var = %Var%`n[+] Process`n
     Var = %Var%`tPID  : %PID% or 0x%0xPID%`n
     Var = %Var%`tBits : %Bits%`n
@@ -272,22 +289,18 @@ TerminateActiveWindow()
 _EscapeCloseWindowConfirmation:
 {
     WinGet, WID, ID, A
-    WinGet, Active_Process, ProcessName, ahk_id %WID%
+    WinGet, FileName, ProcessName, ahk_id %WID%
 
     WinGetTitle, TitleName, A
 
-    TitleNameMaxLen := 40
-    TitleNameLen := StrLen(TitleName)
-    If (TitleNameLen > TitleNameMaxLen)
-    {
-        TitleName := SubStr(TitleName, 1, TitleNameMaxLen)
-        TitleName = %TitleName%` ...`
-    }
+    MAX_STR_LEN = 40
+    FileName  := TruncateString(FileName, MAX_STR_LEN)
+    TitleName := TruncateString(TitleName, MAX_STR_LEN)
 
     Var = `Would you like to close this window ?`n
     Var = %Var%` `n
     Var = %Var%`Title Name : %TitleName%`n
-    Var = %Var%`Process Name : %Active_Process%`n
+    Var = %Var%`Process Name : %FileName%`n
 
     ; 0x1000    System Modal (always on top)
     ; 0x100     Makes the 2nd button the default
