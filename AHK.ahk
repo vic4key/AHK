@@ -8,6 +8,7 @@ DetectHiddenWindows, On
 GroupAdd $GroupEscapeConfirmation, ahk_exe TortoiseProc.exe
 GroupAdd $GroupEscapeConfirmation, ahk_exe TortoiseMerge.exe
 GroupAdd $GroupEscapeConfirmation, ahk_exe TortoiseGitProc.exe
+GroupAdd $GroupEscapeConfirmation, ahk_exe TortoiseGitMerge.exe
 #IfWinActive ahk_group $GroupEscapeConfirmation
 Esc::goto _EscapeCloseWindowConfirmation ; ESC
 !F4::goto _EscapeCloseWindowConfirmation ; ALT F4
