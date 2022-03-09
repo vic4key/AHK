@@ -10,6 +10,7 @@ GroupAdd $GroupEscapeConfirmation, ahk_exe TortoiseMerge.exe
 GroupAdd $GroupEscapeConfirmation, ahk_exe TortoiseGitProc.exe
 #IfWinActive ahk_group $GroupEscapeConfirmation
 Esc::goto _EscapeCloseWindowConfirmation ; ESC
+!F4::goto _EscapeCloseWindowConfirmation ; ALT F4
 #IfWinActive
 
 ; Adjust Speakers
@@ -113,7 +114,7 @@ DisplayHelp()
     Var = %Var%View Active App Information : WIN Y`n
     Var = %Var%Terminate Current Active App : WIN DEL`n
     Var = %Var%Prevent Window Closing by System Menu : WIN SPACE`n
-    Var = %Var%Confirm Window Closing by Escape: ESC`n
+    Var = %Var%Confirm Window Closing by Escape: ESC & ALT F4`n
     Var = %Var%Set Active Window Always On Top : WIN T`n
     Var = %Var%Open Active App Containing Folder : WIN O`n
     Var = %Var%`n
@@ -261,8 +262,8 @@ TerminateActiveWindow()
     ; 0x100     Makes the 2nd button the default
     ; 0x20      Icon Question
     ; 0x4       Yes/No
-    MsgBox, 0x1024, AHK Terminate Process, %Var%`n Are you sure to kill this process ?
-    ifMsgBox,Yes
+    MsgBox, 0x1124, AHK Terminate Process, %Var%`n Are you sure to kill this process ?
+    ifMsgBox, Yes
     {
         Process,Close,%PID%
     }
@@ -288,7 +289,11 @@ _EscapeCloseWindowConfirmation:
     Var = %Var%`Title Name : %TitleName%`n
     Var = %Var%`Process Name : %Active_Process%`n
 
-    MsgBox, 0x1024, AHK Close Window Confirmation, %Var%
+    ; 0x1000    System Modal (always on top)
+    ; 0x100     Makes the 2nd button the default
+    ; 0x20      Icon Question
+    ; 0x4       Yes/No
+    MsgBox, 0x1124, AHK Close Window Confirmation, %Var%
     IfMsgBox, Yes
     WinClose A
 }
@@ -303,7 +308,7 @@ _TerminateActiveWindow:
     ; 0x100     Makes the 2nd button the default
     ; 0x20      Icon Question
     ; 0x4       Yes/No
-    ; MsgBox, 0x1024, AHK Terminate Process, %Var%`nAre you sure to kill this process ?
+    ; MsgBox, 0x1124, AHK Terminate Process, %Var%`nAre you sure to kill this process ?
     ; ifMsgBox,Yes
     ; {
     ;     Process,Close,%PID%
