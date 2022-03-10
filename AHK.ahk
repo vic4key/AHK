@@ -125,15 +125,19 @@ DisplayHelp()
     Var = %Var%Volume Down : WIN DOWN`n
     Var = %Var%`n
 
-    Var = %Var%View Active App Information : WIN Y`n
-    Var = %Var%Terminate Current Active App : WIN DEL`n
-    Var = %Var%Prevent Window Closing by System Menu : WIN SPACE`n
-    Var = %Var%Confirm Window Closing by Escape: ESC & ALT F4`n
-    Var = %Var%Set Active Window Always On Top : WIN T`n
-    Var = %Var%Open Active App Containing Folder : WIN O`n
+    Var = %Var%Virtual Desktop Switching : ALT 1 & ALT 2`n
     Var = %Var%`n
 
-    Var = %Var%Virtual Desktop Switching : ALT 1 & ALT 2`n
+    Var = %Var%View Active Window Information : WIN Y`n
+    Var = %Var%Set Active Window Always On Top : WIN T`n
+    Var = %Var%Open Active Window Containing Folder : WIN O`n
+    Var = %Var%`n
+
+    Var = %Var%Prevent Active Window Closing by System Menu : WIN SPACE`n
+    Var = %Var%Confirm Active Window Closing by Escape: ESC & ALT F4`n
+    Var = %Var%`n
+
+    Var = %Var%Terminate Current Active App : WIN DEL`n
     Var = %Var%`n
 
     Var = %Var%Help : WIN H`n
