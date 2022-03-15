@@ -311,7 +311,7 @@ _EscapeCloseWindowConfirmation:
     ; 0x100     Makes the 2nd button the default
     ; 0x20      Icon Question
     ; 0x4       Yes/No
-    MsgBox, 0x1124, AHK Close Window Confirmation, %Var%
+    MsgBox, 0x1024, AHK Close Window Confirmation, %Var%
     IfMsgBox, Yes
     WinClose A
 }
