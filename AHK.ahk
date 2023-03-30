@@ -45,6 +45,13 @@ Esc::goto _EscapeCloseWindowConfirmation ; ESC
 ; Display Active Window Information
 #Y:: DisplayActiveWindowInformation() ; WIN Y
 
+; Copy Text from MS Word to Clipboard Without Indexing
+^+c::
+SendInput, ^c
+Clipboard := RegExReplace(Clipboard, "(?m)^([\d\.\s]+)", "")
+; MsgBox %Clipboard%
+Return
+
 ; Display Help
 #H:: DisplayHelp() ; WIN H
 
@@ -138,6 +145,9 @@ DisplayHelp()
     Var = %Var%`n
 
     Var = %Var%Terminate Current Active App : WIN DEL`n
+    Var = %Var%`n
+
+    Var = %Var%Copy Text from MS Word to Clipboard Without Indexing : CTRL SHIFT C`n
     Var = %Var%`n
 
     Var = %Var%Help : WIN H`n
