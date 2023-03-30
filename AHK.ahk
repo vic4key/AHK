@@ -46,8 +46,8 @@ Esc::goto _EscapeCloseWindowConfirmation ; ESC
 #Y:: DisplayActiveWindowInformation() ; WIN Y
 
 ; Copy Text from MS Word to Clipboard Without Indexing
-^+c::
-SendInput, ^c ; CTRL SHIFT C
+^+c:: ; CTRL SHIFT C
+SendInput, ^c
 Clipboard := RegExReplace(Clipboard, "(?m)^([\d\.\s]+)", "")
 ; MsgBox %Clipboard%
 Return
