@@ -33,11 +33,14 @@ Esc::goto _EscapeCloseWindowConfirmation ; ESC
 ; Set Always On Top
 #T:: Winset, Alwaysontop, , A ; WIN T
 
-; Prevent Window Closing
-#SPACE::PreventWindowClosing() ; WIN SPACE
-
 ; Open Folder of an Active Window
 #O:: OpenActiveWindowFolder() ; WIN O
+
+; Toggle Opacity Active Window
+#J::ToggleOpacityActiveWindow() ; WIN J
+
+; Prevent Window Closing
+#SPACE::PreventWindowClosing() ; WIN SPACE
 
 ; Termimate Active Window
 #DEL:: TerminateActiveWindow() ; WIN DEL
@@ -139,6 +142,7 @@ DisplayHelp()
 
     Var = %Var%View Active Window Information : WIN Y`n
     Var = %Var%Set Active Window Always On Top : WIN T`n
+    Var = %Var%Toggle Opacity Active Window 70`% : WIN J`n
     Var = %Var%Open Active Window Containing Folder : WIN O`n
     Var = %Var%`n
 
@@ -300,6 +304,20 @@ TerminateActiveWindow()
     ifMsgBox, Yes
     {
         Process,Close,%PID%
+    }
+}
+
+ToggleOpacityActiveWindow()
+{
+    WinGet, PID, PID, A
+    WinGet, Var, Transparent, A
+    If Var
+    {
+        WinSet, Transparent, OFF, A
+    }
+    Else
+    {
+        WinSet, Transparent, 180, A ; 70%
     }
 }
 
